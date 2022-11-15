@@ -27,6 +27,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="FlaskWebProject1\auth.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlaskWebProject1\models.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="module1.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="runserver.py" />
     <Compile Include="FlaskWebProject1\__init__.py" />
     <Compile Include="FlaskWebProject1\views.py" />
@@ -40,6 +49,9 @@
     <Folder Include="FlaskWebProject1\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FlaskWebProject1\templates\sign_up.html" />
+    <Content Include="FlaskWebProject1\templates\login.html" />
+    <Content Include="FlaskWebProject1\templates\base.html" />
     <Content Include="requirements.txt" />
     <Content Include="FlaskWebProject1\static\content\bootstrap.css" />
     <Content Include="FlaskWebProject1\static\content\bootstrap.min.css" />
