@@ -11,7 +11,8 @@ import pyodbc
 auth = Blueprint('auth', __name__)
 #auth = Blueprint('auth', __name__)
 cnxn_str = ("Driver={SQL Server Native Client 11.0};"
-            "Server=MSI\ASQL;"
+            # Give your server name
+            "Server=ABCD;"
             "Database=pharma;"
             "Trusted_Connection=yes;")
 cnxn = pyodbc.connect(cnxn_str)
