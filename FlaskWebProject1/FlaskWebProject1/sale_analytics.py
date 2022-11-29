@@ -28,23 +28,43 @@ medicine_vendor
 store = pd.read_sql_query (''' select * from stores''', cnxn)
 store = pd.DataFrame(store)
 
+# orders Table
+orders = pd.read_sql_query (''' select * from orders''', cnxn)
+orders = pd.DataFrame(orders)
+orders
+
+# order details Table
+order_details = pd.read_sql_query (''' select * from order_details''', cnxn)
+order_details = pd.DataFrame(order_details)
+order_details
+
 # Join medicine table and medicine vendor table
-medicine_store = medicines_df.merge(medicine_vendor, on = ['medicine_id','role_id'], how = 'left')
+medicine_store = medicines_df.merge(medicine_vendor, on = ['medicine_id','role_id'], how = 'inner')
 
 # Join medicine_store with store to get store name
-medicine_store = medicine_store.merge(store, on = ['store_id'], how = 'left')
+medicine_store = medicine_store.merge(store, on = ['store_id', 'role_id'], how = 'inner')
+
+# Join order and order details
+order_info = orders.merge(order_details, on = ['order_id', 'role_id'], how = 'inner')
+
+# Join orders and medicine store details
+medicine_order = order_info.merge(medicine_store, on = ['store_id', 'medicine_id', 'role_id'], how = 'inner')
 
 # Viewing the most selling drug
-med_count = medicine_store.groupby(['medicine_name', 'store_id', 'store_name']).agg({'medicine_name' : 'count'}).rename(columns={'medicine_name':'medicine_count'}).reset_index()
+med_count = medicine_order.groupby(['medicine_name', 'store_id', 'store_name']).agg({'quantity' : 'sum'}).rename(columns={'quanity':'medicine_count'}).reset_index()
 
 # For each store the max selling drug
-med_count_max_by_Store = med_count.groupby(['medicine_name', 'store_id', 'store_name']).max().reset_index()
-med_count_max_by_Store
+med_count_max_by_Store = med_count.groupby(['medicine_name', 'store_id']).max().reset_index()
 
 # Display it as a bar plot
 # x axis has store name and y axis the medicine count
-fig = px.bar(med_count_max_by_Store, x="store_name", y="medicine_count", text="medicine_name", title="Most Selling Drug", 
+fig = px.bar(med_count_max_by_Store, x="store_name", y="quantity", text="medicine_name", 
+labels={"quantity": "MEDICINE COUNT","store_name": "STORE NAME "},title="Most Selling Drug", 
 color_discrete_sequence =["#93D500"])
 fig.update_xaxes(type='category')
 fig.show()
+
+##### Requirement 2: The system shall allow selecting the time window and display the store with most selling drug
+
+
 
