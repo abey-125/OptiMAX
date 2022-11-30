@@ -294,7 +294,7 @@ def display_maxthreshold_medicine(innerjoin3):
 	
  #Nikhila Elsa Mathews
  #The system shall display a dashboard with minimum threshold of a medicine and current stock on hand
-def display_maxthreshold_medicine(innerjoin3):
+def display_minthreshold_medicine(innerjoin3):
     
     #Plotting the graphs
     threshold_graph = pd.melt(innerjoin3, id_vars=['medicine_name', 'store_name' ], \
