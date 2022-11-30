@@ -231,4 +231,18 @@ def top_rating_for_store(cnxn):
 
     return data
 
+############################# SALE ANALYTICS STORE ####################################################
+#Nikhila Elsa Mathews
+#The system shall display a default threshold for each medicine based on its sales
+def display_maxthreshold_medicine(innerjoin3):
+    
+    #Plotting the graphs
+    threshold_graph = pd.melt(innerjoin3, id_vars=['medicine_name', 'store_name' ], \
+    value_vars =['max_threshold','stock_in_hand'
+    ], var_name='Inventory', value_name='Values')
 
+    threshold_graph=threshold_graph.groupby(['medicine_name','store_name','Inventory']).agg({'Values' : 'sum'}).sort_values(by='Values').reset_index()
+
+    fig = px.bar(threshold_graph, x="medicine_name", y="Values", color="Inventory")
+    fig.show()
+	
