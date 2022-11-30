@@ -119,7 +119,7 @@ def most_selling_drug_by_time_frame(most_selling_drug_vendor):
     # x axis has store name and y axis the medicine count
     fig = px.bar(med_count_max_by_Store, x="store_name", y="quantity", text="medicine_name",
     labels={"quantity": "MEDICINE COUNT","store_name": "STORE NAME "}, title="Most Selling Drug from" + " " + enter_the_date_range_1 + " " + "to" + " " + enter_the_date_range_2, 
-    color_discrete_sequence =["#93D500"])
+    color_discrete_sequence =["yellow"])
 
     # fig.update_xaxes(type='category')
     fig.show()
@@ -139,9 +139,9 @@ def least_selling_drug_by_time_frame(least_selling_drug_vendor):
     least_selling_drug_by_time = least_selling_drug_vendor[(least_selling_drug_vendor['date_created'] >= enter_the_date_range_1) & (least_selling_drug_vendor['date_created'] <= enter_the_date_range_2)]
     least_selling_drug_by_time.drop(['role_id_x', 'role_id_y'], axis = 1)
 
-    # Viewing the most selling drug
+    # Viewing the least selling drug
     med_count = least_selling_drug_by_time.groupby(['medicine_name', 'store_id', 'store_name', 'vendor_id', 'vendor_name','date_created']).agg({'quantity' : 'sum'}).rename(columns={'quanity':'medicine_count'}).reset_index()
-    # For each store the max selling drug
+    # For each store the least selling drug
     med_count_min_by_Store = med_count.groupby(['store_id', 'vendor_id', 'store_name','vendor_name'])['quantity'].min().reset_index()
 
     med_count_min_by_Store = med_count_min_by_Store.merge(med_count, on  = ['store_id', 'vendor_id', 'store_name', 'quantity', 'vendor_name'], how='inner')
@@ -150,7 +150,7 @@ def least_selling_drug_by_time_frame(least_selling_drug_vendor):
     # x axis has store name and y axis the medicine count
     fig = px.bar(med_count_min_by_Store, x="store_name", y="quantity", text="medicine_name",
     labels={"quantity": "MEDICINE COUNT","store_name": "STORE NAME "}, title="Least Selling Drug from" + " " + enter_the_date_range_1 + " " + "to" + " " + enter_the_date_range_2, 
-    color_discrete_sequence =["#93D500"])
+    color_discrete_sequence =["red"])
 
     # fig.update_xaxes(type='category')
     fig.show()
@@ -212,14 +212,42 @@ def transit_days(transit, orders, vendors, store, vendor):
 
 # Requirement 6
 
-''' '''
+''' View total sales per day '''
+
+def total_sales_per_day(orders, vendors, order_details, vendor):
+
+    # join order and order_details
+    order_info = orders.merge(order_details, on = ['order_id', 'role_id'], how = 'inner')
+    
+    # join with vendor table
+    order_vendor = order_info.merge(vendors, on=['vendor_id'], how='inner')
+
+    order_vendor = order_vendor[['vendor_name', 'date_created','quantity', 'unit_price']]
+    order_vendor['total'] = order_vendor['quantity'] * order_vendor['unit_price']
+
+    sales_per_day = order_vendor.groupby(['date_created', 'vendor_name']).agg({'total':'sum'}).reset_index()
+
+    sales_per_day['date_created'] = pd.to_datetime(sales_per_day['date_created']).dt.date
+
+    sales_per_day = sales_per_day[(sales_per_day.vendor_name == vendor)] 
+    sales_per_day.drop(['vendor_name'], axis=1, inplace = True)
+
+    # Display it as a bar plot
+    fig = px.bar(sales_per_day, x="date_created", y="total",
+    labels={"date_created": "DATE","total": "TOTAL_SALES"}, title="Total Number of Sales Per Day",
+    color_discrete_sequence =["violet"])
+
+    fig.update_xaxes(type='category')
+    fig.show()
+    
+    return sales_per_day
 
 
 
 
 
 ############################################ RATINGS SUPPLIER ###################################################################
-
+# Aman
 def top_rating_for_store(cnxn):
     StoreNum= input('Enter the store number: ')
     # build up our query string
