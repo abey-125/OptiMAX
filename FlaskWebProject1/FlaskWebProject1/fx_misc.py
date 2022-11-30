@@ -65,13 +65,15 @@ def filter_vendor_name(vendor, df, cnxn):
     vendors = pd.read_sql_query (''' select * from vendors''', cnxn)
     vendors = pd.DataFrame(vendors)
 
-    most_selling_drug_vendor = df.merge(vendors, on = ['vendor_id', 'vendor_name'], how = 'inner')
+    most_selling_drug_vendor = df.merge(vendors, on = ['vendor_id'], how = 'inner')
     # Filter to vendor name
     most_selling_drug_vendor = most_selling_drug_vendor[(most_selling_drug_vendor.vendor_name == vendor)] 
 
     return most_selling_drug_vendor
 
 # Requirement 1
+
+'''Display the most selling drug by store ''' 
 
 def most_selling_drug(most_selling_drug_vendor):
 
@@ -93,6 +95,8 @@ def most_selling_drug(most_selling_drug_vendor):
     return med_count_max_by_Store  
 
 # Requirement 2
+
+''' Display most selling drug by time frame'''
 
 def most_selling_drug_by_time_frame(most_selling_drug_vendor):
 
@@ -122,6 +126,9 @@ def most_selling_drug_by_time_frame(most_selling_drug_vendor):
     return med_count_max_by_Store 
 
 # Requirement 3
+
+''' Display least selling drug by time frame '''
+
 def least_selling_drug_by_time_frame(least_selling_drug_vendor):
 
     # Enter the time range
@@ -149,7 +156,9 @@ def least_selling_drug_by_time_frame(least_selling_drug_vendor):
     fig.show()
     return med_count_min_by_Store
 
-# Requirement 3
+# Requirement 4
+
+''' View stores by location '''
 
 def view_store_by_location(cnxn):
 
@@ -169,7 +178,9 @@ def view_store_by_location(cnxn):
     stores_view_by_location.drop(['store_id'], axis = 1 )
     return stores_view_by_location
 
-# Requirement 4 
+# Requirement 5 
+
+''' View trasnsit days to different stores'''
 
 def transit_days(transit, orders, vendors, store, vendor):
 
@@ -197,6 +208,11 @@ def transit_days(transit, orders, vendors, store, vendor):
     order_trasnit_final.drop(['vendor_name'], axis=1, inplace = True)
     
     return order_trasnit_final
+
+
+# Requirement 6
+
+''' '''
 
 
 
