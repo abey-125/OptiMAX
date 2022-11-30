@@ -261,6 +261,86 @@ def view_stores(cnxn):
     return data
 
 
+# Requirement 8
+
+''' Display sale of individual store'''
+
+def total_sales_stores(orders, vendors, order_details, vendor, store):
+    
+    # join order and order_details
+    order_info = orders.merge(order_details, on = ['order_id', 'role_id'], how = 'inner')
+    order_info.head()
+
+    # join with vendor table
+    order_vendor = order_info.merge(vendors, on=['vendor_id'], how='inner')
+
+    # Join with store table
+    order_vendor_store = order_vendor.merge(store, on=['store_id'], how='inner')
+
+    # Select needed columns
+    order_vendor_store = order_vendor_store[['vendor_name', 'store_name', 'store_branch', 'quantity', 'unit_price']]
+
+    # total = quanitity * unit_price
+    order_vendor_store['total'] = order_vendor_store['quantity'] * order_vendor_store['unit_price']
+
+    # group by store name and branch
+    sales_per_store = order_vendor_store.groupby(['store_name','store_branch','vendor_name']).agg({'total':'sum'}).reset_index()
+
+    sales_per_store = sales_per_store[(sales_per_store.vendor_name == vendor)] 
+    sales_per_store.drop(['vendor_name'], axis=1, inplace = True)
+
+    # Display it as a bar plot
+    fig = px.bar(sales_per_store, x="store_name", y="total",
+    labels={"store_name": "STORE_NAME","total": "TOTAL_SALES"}, title="Total Sales for Store",
+    color_discrete_sequence =["blue"])
+
+    fig.update_xaxes(type='category')
+    fig.show()
+
+    sales_per_store.head()
+
+
+# Requirement 9
+
+''' Display sale of all branches combined'''
+
+def total_sales_branches(orders, vendors, order_details, vendor, store):
+    
+    # join order and order_details
+    order_info = orders.merge(order_details, on = ['order_id', 'role_id'], how = 'inner')
+    order_info.head()
+
+    # join with vendor table
+    order_vendor = order_info.merge(vendors, on=['vendor_id'], how='inner')
+
+    # Join with store table
+    order_vendor_store = order_vendor.merge(store, on=['store_id'], how='inner')
+
+    # Select needed columns
+    order_vendor_store = order_vendor_store[['vendor_name', 'store_name', 'store_branch', 'quantity', 'unit_price']]
+
+    # total = quanitity * unit_price
+    order_vendor_store['total'] = order_vendor_store['quantity'] * order_vendor_store['unit_price']
+
+    # group by store name and branch
+    sales_per_store = order_vendor_store.groupby(['store_name','vendor_name']).agg({'total':'sum'}).reset_index()
+
+    sales_per_store = sales_per_store[(sales_per_store.vendor_name == vendor)] 
+    sales_per_store.drop(['vendor_name'], axis=1, inplace = True)
+
+    # Display it as a bar plot
+    fig = px.bar(sales_per_store, x="store_name", y="total",
+    labels={"store_name": "STORE_NAME","total": "TOTAL_SALES"}, title="Total Sales for all Branches of Store",
+    color_discrete_sequence =["green"])
+
+    fig.update_xaxes(type='category')
+    fig.show()
+
+    return sales_per_store.head()
+
+
+
+
 
 
 
