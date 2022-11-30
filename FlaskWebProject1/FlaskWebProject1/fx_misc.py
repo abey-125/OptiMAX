@@ -242,6 +242,24 @@ def total_sales_per_day(orders, vendors, order_details, vendor):
     
     return sales_per_day
 
+# Requirement 7
+
+''' Display all branches of stores'''
+
+def view_stores(cnxn):
+
+    # Enter the address
+    store_name = input("Enter the store name")
+
+    # build up our query string
+    query = ("SELECT store_name, store_branch, store_address, store_contact, store_email FROM stores"
+                    f" WHERE (store_name = '{store_name}' ) ")
+
+    # execute the query and read to a dataframe in Python
+    data = pd.read_sql(query, cnxn)
+
+    return data
+
 
 
 
