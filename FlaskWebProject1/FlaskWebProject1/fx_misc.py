@@ -292,3 +292,16 @@ def display_maxthreshold_medicine(innerjoin3):
     fig = px.bar(threshold_graph, x="medicine_name", y="Values", color="Inventory")
     fig.show()
 	
+ #Nikhila Elsa Mathews
+ #The system shall display a dashboard with minimum threshold of a medicine and current stock on hand
+def display_maxthreshold_medicine(innerjoin3):
+    
+    #Plotting the graphs
+    threshold_graph = pd.melt(innerjoin3, id_vars=['medicine_name', 'store_name' ], \
+    value_vars =['min_threshold','stock_in_hand'
+    ], var_name='Inventory', value_name='Values')
+
+    threshold_graph=threshold_graph.groupby(['medicine_name','store_name','Inventory']).agg({'Values' : 'sum'}).sort_values(by='Values').reset_index()
+
+    fig = px.bar(threshold_graph, x="medicine_name", y="Values", color="Inventory")
+    fig.show()
