@@ -30,8 +30,8 @@ innerjoin1=innerjoin1.merge(med_store,on=['medicine_id','role_id','store_id','st
 innerjoin2 = innerjoin1.merge(med, on = ['medicine_id','role_id'], how = 'inner')
 innerjoin3=innerjoin2.merge(store, on=['store_id','role_id'],how='inner')
 #Plotting the graphs
-fx_misc.display_maxthreshold_medicine(innerjoin3)
+fx_misc.display_maxthreshold_medicine(med_store,med,threshold,store)
 
 #Nikhila Elsa Mathews
 #The system shall display a dashboard with minimum threshold of a medicine and current stock on hand
-fx_misc.display_minthreshold_medicine(innerjoin3)
+fx_misc.display_minthreshold_medicine(med_store,med,threshold,store)
