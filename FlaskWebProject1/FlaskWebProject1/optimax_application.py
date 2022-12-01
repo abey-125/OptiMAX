@@ -127,7 +127,7 @@ while True:
         while True: 
             print("1. DISPLAY TRANSIT DAYS BETWEEN TWO STORES")  
             print("2. DISPLAY MEDICINES WITH SOH LESS THAN MIN NEED")  
-            print("3. DISPLAY MEDICINES WITH SOH MORE THAN MIN NEED")  
+            print("3. DISPLAY MEDICINES WITH SOH MORE THAN MAX NEED")  
             print("4. DISPLAY LIST OF EXPIRED MEDICINES") 
             print("5. EXIT")
             choice3 = int(input("Enter the Choice3:"))  
