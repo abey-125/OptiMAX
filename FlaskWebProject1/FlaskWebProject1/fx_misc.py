@@ -2,7 +2,6 @@
 import pyodbc
 import pandas as pd
 import plotly.express as px
-import matplotlib.pyplot as plt
 from datetime import date, datetime
 
 # Author : Chinnu Treesa Fulton -- Sale analytics for Supplier
@@ -11,7 +10,7 @@ def connection():
     # SQL Database Connection
     cnxn_str = ("Driver={SQL Server Native Client 11.0};"
                 # Change the server name 
-                "Server=LAPTOP-T8RJOBVC\CFSQL;"
+                "Server=LAPTOP-BL7HADLT\AKSQL;"
                 "Database=Optimax;"
                 "Trusted_Connection=yes;")
     cnxn = pyodbc.connect(cnxn_str)
@@ -424,6 +423,7 @@ def create_new_order(cnxn):
                         f" VALUES (?,?,?,?,?,?,?)")
         data_order = (int(row.max_order_id), ven, store, now, 'S', total_price, 1)
         cursor.execute(add_order, data_order)
+        print("Order Created Successfully")
     cnxn.commit()
 
 # display medicines to stores which have SOH more than the max threshold 
@@ -439,7 +439,7 @@ def display_med_SOH_more_max(cnxn):
 
 #creating new return
 def create_new_return(cnxn):
-    query = ("select max(order_id) + 1 AS max_return_id from ord_returns;")
+    query = ("select max(return_id) + 1 AS max_return_id from ord_returns;")
     max_return_id = pd.read_sql_query(query, cnxn)
     max_return_id = pd.DataFrame(max_return_id, columns = ['max_return_id'])
     #max_return_id = max_return_id.astype({'max_return_id':'int'})
@@ -465,11 +465,12 @@ def create_new_return(cnxn):
 
     cursor = cnxn.cursor()
     for index, row in max_return_id.iterrows(): 
-        add_return = ("INSERT INTO orders "
+        add_return = ("INSERT INTO ord_returns "
                         f" (return_id,vendor_id,store_id,total_price,returned_date,role_id) "
                         f" VALUES (?,?,?,?,?,?)")
         data_return = (int(row.max_return_id), ven, store, total_price,now, 1)
         cursor.execute(add_return, data_return)
+        print("Return Created Successfully")
     cnxn.commit()
 
 def disply_expired_meds(cnxn):
