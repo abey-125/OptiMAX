@@ -10,6 +10,13 @@ def connection():
     # SQL Database Connection
     cnxn_str = ("Driver={SQL Server Native Client 11.0};"
                 # Change the server name 
+                # Change the server name 
+                # Change the server name 
+                # Chinnu server : LAPTOP-T8RJOBVC\CFSQL
+                # Tony Server : LAPTOP-KUEGS2UO\TSQL
+                # Abey Server : MSI\ASQL
+                # Nikhila Server : NIKKI-PC\ASQL
+                # Amanpreet Server : LAPTOP-BL7HADLT\AKSQL
                 "Server=LAPTOP-BL7HADLT\AKSQL;"
                 "Database=Optimax;"
                 "Trusted_Connection=yes;")
