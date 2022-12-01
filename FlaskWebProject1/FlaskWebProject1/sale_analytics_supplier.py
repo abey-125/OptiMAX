@@ -116,10 +116,11 @@ while True:
                 else:  
                     print("Oops! Incorrect Choice.")  
 
-    elif choice1 == 2:  
+    elif choice1 == 2: 
+        store_name = input("Enter the store name") 
         # Store analytics 
-        print("1. ")  
-        print("2. ")  
+        print("1. VIEW MAXIMUM THRESHOLD OF MEDICINES ")  
+        print("2. VIEW MINIMUM THRESHOLD OF MEDICINES ")  
         print("3. ")  
         print("4. ")  
         choice3 = int(input("Enter the Choice3:"))  
