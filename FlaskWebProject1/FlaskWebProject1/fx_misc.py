@@ -163,7 +163,7 @@ def least_selling_drug_by_time_frame(least_selling_drug_vendor):
 def view_store_by_location(cnxn):
 
     # Enter the address
-    address = input("Enter the location or store name")
+    address = input("Enter the location")
 
     # Store table
     store = pd.read_sql_query (''' select * from stores''', cnxn)
@@ -341,10 +341,8 @@ def total_sales_branches(orders, vendors, order_details, vendor, store):
 
 
 
-
-
-
 ############################################ RATINGS SUPPLIER ###################################################################
+
 # Aman
 def top_rating_for_store(cnxn):
     StoreNum= input('Enter the store number: ')
@@ -358,8 +356,10 @@ def top_rating_for_store(cnxn):
     return data
 
 ############################# SALE ANALYTICS STORE ####################################################
-#Nikhila Elsa Mathews
-#The system shall display a default threshold for each medicine based on its sales
+
+# Nikhila Elsa Mathews
+# The system shall display a default threshold for each medicine based on its sales
+
 def display_maxthreshold_medicine(innerjoin3):
     
     #Plotting the graphs
@@ -372,8 +372,9 @@ def display_maxthreshold_medicine(innerjoin3):
     fig = px.bar(threshold_graph, x="medicine_name", y="Values", color="Inventory")
     fig.show()
 	
- #Nikhila Elsa Mathews
- #The system shall display a dashboard with minimum threshold of a medicine and current stock on hand
+ # Nikhila Elsa Mathews
+ # The system shall display a dashboard with minimum threshold of a medicine and current stock on hand
+
 def display_minthreshold_medicine(innerjoin3):
     
     #Plotting the graphs
