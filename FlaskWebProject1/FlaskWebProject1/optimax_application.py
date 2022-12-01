@@ -2,7 +2,6 @@
 import pyodbc
 import pandas as pd
 import plotly.express as px
-import matplotlib.pyplot as plt
 import fx_misc
 import warnings
 warnings.filterwarnings("ignore")
@@ -96,16 +95,21 @@ while True:
                 elif choice2 == 2: 
                     # Review / Rates
                     while True:
-                        print("1. DISPLAY TOP 5 RATES") 
-                        print("2. EXIT")
+                        print("1. DISPLAY TOP 5 RATINGS FOR STORES") 
+                        print("2. DISPLAY TOP 5 REVIEWS FOR STORE")
+                        print("3. EXIT")
+                        
                         choice2_1 =  int(input("Enter the Choice:"))
                         
                         if choice2_1 == 1:
                             print(fx_misc.top_rating_for_store(cnxn))
 
                         if choice2_1 == 2:
-                            break
+                            print(fx_misc.top_review_for_store(cnxn))
                         
+                        if choice2_1 == 3:
+                            break
+
                 elif choice2 == 3: 
                     # Comparison 
                     print("1.DISPLAY TOP 5 RATES")   
@@ -115,39 +119,61 @@ while True:
                     
                 else:  
                     print("Oops! Incorrect Choice.")  
+            break
 
     elif choice1 == 2: 
         store_name = input("Enter the store name") 
-        # Store analytics 
-        print("1. VIEW MAXIMUM THRESHOLD OF MEDICINES ")  
-        print("2. VIEW MINIMUM THRESHOLD OF MEDICINES ")  
-        print("3. ")  
-        print("4. ")  
-        choice3 = int(input("Enter the Choice3:"))  
+        # Store analytics
+        while True: 
+            print("1. DISPLAY TRANSIT DAYS BETWEEN TWO STORES")  
+            print("2. DISPLAY MEDICINES WITH SOH LESS THAN MIN NEED")  
+            print("3. DISPLAY MEDICINES WITH SOH MORE THAN MIN NEED")  
+            print("4. DISPLAY LIST OF EXPIRED MEDICINES") 
+            print("5. EXIT")
+            choice3 = int(input("Enter the Choice3:"))  
 
-        if choice3 == 1:  
-            radius = int(input("Enter Radius of Circle:"))  
-            
-            
-        elif choice3 == 2:  
-            height = int(input("Enter Height of Rectangle:"))  
-            width = int(input("Enter Width of Rectangle:"))  
-            
-            
-        elif choice3 == 3:  
-            side = int(input("Enter Side of Square:"))  
-            
+            if choice3 == 1:  
+               print(fx_misc.display_transit_days(cnxn))
+               
+            elif choice3 == 2:  
+                 print(fx_misc.display_med_SOH_less_min(cnxn))
+                 print("1. CREATE NEW ORDER")  
+                 print("2. EXIT")    
+                 choice4 = int(input("Enter the Choice:"))
 
-        elif choice3 == 4:  
-            break  
+                 if choice4 == 1:
+                    print(fx_misc.create_new_order(cnxn))
+
+                 elif choice4 == 2: 
+                     break
+  
+            elif choice3 == 3:  
+                 print(fx_misc.display_med_SOH_more_max(cnxn))
+
+                 print("1. CREATE NEW RETURN")  
+                 print("2. EXIT")    
+                 choice4 = int(input("Enter the Choice:"))
+
+                 if choice4 == 1:
+                    print(fx_misc.create_new_return(cnxn))
+
+                 elif choice4 == 2: 
+                      break
             
-        else:  
-            print("Oops! Incorrect Choice.")  
+            elif choice3 == 4: 
+                 print(fx_misc.disply_expired_meds(cnxn))
+
+            elif choice3 == 5:
+                 break
+            else:  
+                 print("Oops! Incorrect Choice.")                   
+        break
 
     elif choice1 == 3:  
         break  
 
     else:  
-        print("Oops! Incorrect Choice.")  
+        print("Oops! Incorrect Choice.") 
+        
 
 
