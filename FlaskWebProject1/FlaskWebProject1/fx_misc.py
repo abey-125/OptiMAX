@@ -5,7 +5,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 from datetime import date, datetime
 
-# Author : Chinnu Treesa Fulton
+# Author : Chinnu Treesa Fulton -- Sale analytics for Supplier
 
 def connection():
     # SQL Database Connection
