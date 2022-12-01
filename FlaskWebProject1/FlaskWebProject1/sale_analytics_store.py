@@ -24,11 +24,6 @@ store = pd.read_sql_query (''' select * from stores''', cnxn)
 store = pd.DataFrame(store)
 store
 
-#Joining various tables
-innerjoin1 = med_store.merge(threshold, on = ['store_id','medicine_id','role_id'], how = 'inner')
-innerjoin1=innerjoin1.merge(med_store,on=['medicine_id','role_id','store_id','stock_in_hand','transit_quantity'],how='inner')
-innerjoin2 = innerjoin1.merge(med, on = ['medicine_id','role_id'], how = 'inner')
-innerjoin3=innerjoin2.merge(store, on=['store_id','role_id'],how='inner')
 #Plotting the graphs
 fx_misc.display_maxthreshold_medicine(med_store,med,threshold,store)
 

@@ -498,8 +498,13 @@ def disply_expired_meds(cnxn):
 # Nikhila Elsa Mathews
 # The system shall display a default threshold for each medicine based on its sales
 
-def display_maxthreshold_medicine(innerjoin3):
+def display_maxthreshold_medicine(med_store,med,threshold,store):
     
+    #Joining various tables
+    innerjoin1 = med_store.merge(threshold, on = ['store_id','medicine_id','role_id'], how = 'inner')
+    innerjoin1=innerjoin1.merge(med_store,on=['medicine_id','role_id','store_id','stock_in_hand','transit_quantity'],how='inner')
+    innerjoin2 = innerjoin1.merge(med, on = ['medicine_id','role_id'], how = 'inner')
+    innerjoin3=innerjoin2.merge(store, on=['store_id','role_id'],how='inner')
     #Plotting the graphs
     threshold_graph = pd.melt(innerjoin3, id_vars=['medicine_name', 'store_name' ], \
     value_vars =['max_threshold','stock_in_hand'
@@ -513,8 +518,13 @@ def display_maxthreshold_medicine(innerjoin3):
  # Nikhila Elsa Mathews
  # The system shall display a dashboard with minimum threshold of a medicine and current stock on hand
 
-def display_minthreshold_medicine(innerjoin3):
+def display_minthreshold_medicine(med_store,med,threshold,store):
     
+    #Joining various tables
+    innerjoin1 = med_store.merge(threshold, on = ['store_id','medicine_id','role_id'], how = 'inner')
+    innerjoin1=innerjoin1.merge(med_store,on=['medicine_id','role_id','store_id','stock_in_hand','transit_quantity'],how='inner')
+    innerjoin2 = innerjoin1.merge(med, on = ['medicine_id','role_id'], how = 'inner')
+    innerjoin3=innerjoin2.merge(store, on=['store_id','role_id'],how='inner')
     #Plotting the graphs
     threshold_graph = pd.melt(innerjoin3, id_vars=['medicine_name', 'store_name' ], \
     value_vars =['min_threshold','stock_in_hand'
