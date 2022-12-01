@@ -342,18 +342,148 @@ def total_sales_branches(orders, vendors, order_details, vendor, store):
 
 
 ############################################ RATINGS SUPPLIER ###################################################################
+# NAMA SCRIPT BEGIN 
 
-# Aman
+
 def top_rating_for_store(cnxn):
     StoreNum= input('Enter the store number: ')
     # build up our query string
-    query = ("SELECT s.store_name, r.rating, r.ratings_date FROM ratings AS r INNER JOIN stores AS s ON r.store_id = s.store_id"
+    query = ("SELECT TOP 5 s.store_name, r.rating, r.ratings_date FROM ratings AS r INNER JOIN stores AS s ON r.store_id = s.store_id"
                     f" WHERE (s.store_id = '{StoreNum}' ) ")
 
     # execute the query and read to a dataframe in Python
     data = pd.read_sql(query, cnxn)
 
     return data
+
+def top_review_for_store(cnxn):
+    StoreNum= input('Enter the store number: ')
+    # build up our query string
+    query = ("SELECT TOP 5 s.store_name, r.review_comment, r.ratings_date FROM ratings AS r INNER JOIN stores AS s ON r.store_id = s.store_id"
+                    f" WHERE (s.store_id = '{StoreNum}' ) ")
+
+    # execute the query and read to a dataframe in Python
+    data = pd.read_sql(query, cnxn)
+
+    return data
+
+
+############################################ STORES ###################################################################
+
+# display the transit days between two stores
+def display_transit_days(cnxn):
+    Store1 = input('Enter the origin store id: ')
+    Store2 = input('Enter the destination store id:')
+    query = ("SELECT s1.store_name , origin, s2.store_name, destination, days"
+             f" FROM transit_days t , stores s1, stores s2"
+             f" WHERE origin = s1.city AND destination = s2.city"
+             f" AND s1.store_id = '{Store1}' AND s2.store_id = '{Store2}';" )
+    data = pd.read_sql(query, cnxn)
+    return data
+
+# display medicines to stores which have SOH less than the min threshold 
+def display_med_SOH_less_min(cnxn):
+    query = ("SELECT s.store_name, m.medicine_name, ms.stock_in_hand, mt.min_threshold, mt.max_threshold"
+             f" FROM medicines AS m INNER JOIN"
+             f" med_store AS ms ON m.medicine_id = ms.medicine_id INNER JOIN"
+             f" stores AS s ON ms.store_id = s.store_id INNER JOIN"
+             f" med_threshold AS mt ON m.medicine_id = mt.medicine_id AND ms.stock_in_hand < mt.min_threshold")
+    data = pd.read_sql(query, cnxn)
+    return data
+
+#creating new orders
+def create_new_order(cnxn):
+    query = ("select max(order_id) + 1 AS max_order_id from orders;")
+    max_order_id = pd.read_sql_query(query, cnxn)
+    max_order_id = pd.DataFrame(max_order_id, columns = ['max_order_id'])
+    #max_order_id = max_order_id.astype({'max_order_id':'int'})
+    print(max_order_id)
+    med = int(input('Enter the medicine id: '))
+    ven = int(input('Enter the vendor id: '))
+    print(ven)
+    store = int(input('Enter the store id: '))
+    print(store)
+    qty = int(input('Enter the quantity:'))
+    price= (" SELECT m.standard_price + me.freight_amount AS price"
+            f" FROM medicines AS m INNER JOIN"
+            f" medicine_expense AS me ON m.medicine_id = me.medicine_id"
+            f" WHERE (m.medicine_id = {med})")
+    data = pd.read_sql_query (price, cnxn)
+    price = pd.DataFrame(data, columns = ['price'])
+    price = price.astype({'price':'int'})
+    print(price)
+    total_price = price['price'] * qty
+    total_price= int(total_price)
+    now = datetime.now()
+    print(now)
+
+    cursor = cnxn.cursor()
+    for index, row in max_order_id.iterrows(): 
+        add_order = ("INSERT INTO orders "
+                        f" (order_id,vendor_id,store_id,date_created,order_status,total_price,role_id) "
+                        f" VALUES (?,?,?,?,?,?,?)")
+        data_order = (int(row.max_order_id), ven, store, now, 'S', total_price, 1)
+        cursor.execute(add_order, data_order)
+    cnxn.commit()
+
+# display medicines to stores which have SOH more than the max threshold 
+def display_med_SOH_more_max(cnxn):
+    query = ("SELECT s.store_name, m.medicine_name, ms.stock_in_hand, mt.min_threshold, mt.max_threshold"
+             f" FROM medicines AS m INNER JOIN"
+             f" med_store AS ms ON m.medicine_id = ms.medicine_id INNER JOIN"
+             f" stores AS s ON ms.store_id = s.store_id INNER JOIN"
+             f" med_threshold AS mt ON m.medicine_id = mt.medicine_id AND ms.stock_in_hand > mt.max_threshold")
+    data = pd.read_sql(query, cnxn)
+    return data
+
+
+#creating new return
+def create_new_return(cnxn):
+    query = ("select max(order_id) + 1 AS max_return_id from ord_returns;")
+    max_return_id = pd.read_sql_query(query, cnxn)
+    max_return_id = pd.DataFrame(max_return_id, columns = ['max_return_id'])
+    #max_return_id = max_return_id.astype({'max_return_id':'int'})
+    print(max_return_id)
+    med = int(input('Enter the medicine id: '))
+    ven = int(input('Enter the vendor id: '))
+    print(ven)
+    store = int(input('Enter the store id: '))
+    print(store)
+    qty = int(input('Enter the quantity:'))
+    price= (" SELECT m.standard_price + me.freight_amount AS price"
+            f" FROM medicines AS m INNER JOIN"
+            f" medicine_expense AS me ON m.medicine_id = me.medicine_id"
+            f" WHERE (m.medicine_id = {med})")
+    data = pd.read_sql_query (price, cnxn)
+    price = pd.DataFrame(data, columns = ['price'])
+    price = price.astype({'price':'int'})
+    print(price)
+    total_price = price['price'] * qty
+    total_price= int(total_price)
+    now = datetime.now()
+    print(now)
+
+    cursor = cnxn.cursor()
+    for index, row in max_return_id.iterrows(): 
+        add_return = ("INSERT INTO orders "
+                        f" (return_id,vendor_id,store_id,total_price,returned_date,role_id) "
+                        f" VALUES (?,?,?,?,?,?)")
+        data_return = (int(row.max_return_id), ven, store, total_price,now, 1)
+        cursor.execute(add_return, data_return)
+    cnxn.commit()
+
+def disply_expired_meds(cnxn):
+    now = datetime.now()
+    # build up our query string
+    query = ("SELECT medicine_id, medicine_name, expiry_date, manufactured_date, medicine_type, key_ingredient, standard_price, role_id"
+             f" FROM     medicines"
+             f" WHERE  (expiry_date <= '{now}')")
+    # execute the query and read to a dataframe in Python
+    data = pd.read_sql(query, cnxn)
+    return data
+
+
+############################################ NAMA SCRIPT END #################################################################################
 
 ############################# SALE ANALYTICS STORE ####################################################
 
